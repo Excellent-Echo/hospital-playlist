@@ -36,9 +36,9 @@ func (h *userHandler) ShowUserHandler(c *gin.Context) {
 
 // CreateUserHandler for handing if user / external create new user from route "/users"
 func (h *userHandler) CreateUserHandler(c *gin.Context) {
-	var inputPasien entity.UserInput
+	var inputUser entity.UserInput
 
-	if err := c.ShouldBindJSON(&inputPasien); err != nil {
+	if err := c.ShouldBindJSON(&inputUser); err != nil {
 		splitError := helper.SplitErrorInformation(err)
 		responseError := helper.APIResponse("input data required", 400, "bad request", gin.H{"errors": splitError})
 
@@ -46,7 +46,7 @@ func (h *userHandler) CreateUserHandler(c *gin.Context) {
 		return
 	}
 
-	newUser, err := h.userService.SaveNewUser(inputPasien)
+	newUser, err := h.userService.SaveNewUser(inputUser)
 	if err != nil {
 		responseError := helper.APIResponse("internal server error", 500, "error", gin.H{"error": err.Error()})
 
