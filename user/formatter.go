@@ -24,6 +24,7 @@ func FormatUser(user entity.User) UserFormat {
 		ID:           user.ID,
 		Email:        user.Email,
 		NamaLengkap:  user.NamaLengkap,
+		TanggalLahir: user.TanggalLahir,
 		Alamat:       user.Alamat,
 		JenisKelamin: user.JenisKelamin,
 	}
