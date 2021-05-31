@@ -5,11 +5,10 @@ import (
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/joho/godotenv"
 )
 
 var (
-	err = godotenv.Load()
+	// err = godotenv.Load()
 	key = os.Getenv("SECRET_KEY")
 )
 
