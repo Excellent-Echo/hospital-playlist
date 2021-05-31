@@ -20,11 +20,13 @@ type DeleteFormat struct {
 }
 
 func FormatUser(user entity.User) UserFormat {
+	format := "2006-01-02"
+	date, _ := time.Parse(format, "2019-07-10")
 	var formatUser = UserFormat{
 		ID:           user.ID,
 		Email:        user.Email,
 		NamaLengkap:  user.NamaLengkap,
-		TanggalLahir: user.TanggalLahir,
+		TanggalLahir: date,
 		Alamat:       user.Alamat,
 		JenisKelamin: user.JenisKelamin,
 	}

@@ -71,7 +71,7 @@ func (s *service) SaveNewUser(user entity.UserInput) (UserFormat, error) {
 		return UserFormat{}, err
 	}
 
-	var newPatient = entity.User{
+	var newUser = entity.User{
 		NamaLengkap:  user.NamaLengkap,
 		Email:        user.Email,
 		Password:     string(genPassword),
@@ -82,7 +82,7 @@ func (s *service) SaveNewUser(user entity.UserInput) (UserFormat, error) {
 		UpdatedAt:    time.Now(),
 	}
 
-	createUser, err := s.repository.Create(newPatient)
+	createUser, err := s.repository.Create(newUser)
 	formatUser := FormatUser(createUser)
 
 	if err != nil {
@@ -184,7 +184,7 @@ func (s *service) UpdateUserByID(userID string, dataInput entity.UpdateUser) (Us
 		dataUpdate["jenis_kelamin"] = dataInput.JenisKelamin
 	}
 
-	// if dataInput.TanggalLahir != "00/00/000" {
+	// if dataInput.TanggalLahir != time.Time(){
 
 	// }
 
