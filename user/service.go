@@ -72,12 +72,14 @@ func (s *service) SaveNewUser(user entity.UserInput) (UserFormat, error) {
 	}
 
 	var newPatient = entity.User{
-		NamaLengkap: user.NamaLengkap,
-		Email:       user.Email,
-		Password:    string(genPassword),
-		Alamat:      user.Alamat,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
+		NamaLengkap:  user.NamaLengkap,
+		Email:        user.Email,
+		Password:     string(genPassword),
+		Alamat:       user.Alamat,
+		TanggalLahir: user.TanggalLahir,
+		JenisKelamin: user.JenisKelamin,
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 
 	createUser, err := s.repository.Create(newPatient)

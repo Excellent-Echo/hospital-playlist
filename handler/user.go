@@ -59,7 +59,7 @@ func (h *userHandler) CreateUserHandler(c *gin.Context) {
 }
 
 func (h *userHandler) GetUserByIDHandler(c *gin.Context) {
-	id := c.Params.ByName("pasien_id")
+	id := c.Params.ByName("user_id")
 
 	user, err := h.userService.GetUserByID(id)
 	if err != nil {
@@ -74,7 +74,7 @@ func (h *userHandler) GetUserByIDHandler(c *gin.Context) {
 }
 
 func (h *userHandler) DeleteUserByIDHandler(c *gin.Context) {
-	id := c.Params.ByName("pasien_id")
+	id := c.Params.ByName("user_id")
 
 	user, err := h.userService.DeleteUserByID(id)
 
