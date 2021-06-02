@@ -47,3 +47,26 @@ func Middleware(userService user.Service, authService auth.Service) gin.HandlerF
 	}
 
 }
+
+func AdminMiddleware(userRepository user.Repository) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userLogin := c.MustGet("currentUser").(string)
+
+		user, err := userRepository.FindByID(userLogin)
+
+		if err != nil {
+			errorResponse := gin.H{"error": "error in internal middleware"}
+
+			c.AbortWithStatusJSON(500, errorResponse)
+
+			return
+		}
+		if (user.Role != "Dokter") || (user.Role != "admin") {
+			errorResponse := gin.H{"error": "user login is not admin atau dokter"}
+
+			c.AbortWithStatusJSON(401, errorResponse)
+			return
+		}
+
+	}
+}
