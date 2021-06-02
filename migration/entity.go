@@ -13,6 +13,7 @@ type User struct {
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 	DeletedAt    time.Time `gorm:"index" json:"-"`
+	Role         string    `json:"role"`
 	// Specialists []Specialist `gorm:"foreignKey:UserID" json:"spesialis"`
 	// Medicines   []Medicine   `gorm:"foreignKey:UserID" json:"medicine"`
 	// Rooms       []Room       `gorm:"foreignKey:UserID" json:"room"`

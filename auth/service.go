@@ -8,7 +8,6 @@ import (
 )
 
 var (
-	// err = godotenv.Load()
 	key = os.Getenv("SECRET_KEY")
 )
 

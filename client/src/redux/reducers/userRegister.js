@@ -6,7 +6,6 @@ import {
 	USER_REGISTER_SET_GENDER,
 	USER_REGISTER_SET_EMAIL,
 	USER_REGISTER_SET_PASSWORD,
-	USER_REGISTER_SET_PASSWORD,
 	USER_REGISTER_SET_ERROR_MESSAGE,
 	USER_REGISTER_SET_SUCCESS_MESSAGE,
 	USER_REGISTER_START_LOADING,
@@ -14,8 +13,6 @@ import {
 } from '../actionTypes/userRegister'
 
 const initialState = {
-	firstName: '',
-	lastName: '',
 	email: '',
 	password: '',
 	fullName: '',
@@ -27,7 +24,7 @@ const initialState = {
 	isLoading: false
 }
 
-const userRegisterReducer = (state = initialState, action) => {
+const userRegister = (state = initialState, action) => {
 	switch (action.type) {
 		case USER_REGISTER_RESET_FORM:
 			return {
@@ -46,22 +43,22 @@ const userRegisterReducer = (state = initialState, action) => {
 		case USER_REGISTER_SET_FULLNAME:
 			return {
 				...state,
-				firstName: action.payload.fullName
+				fullName: action.payload.fullName
 			}
 		case USER_REGISTER_SET_BIRTHDATE:
 			return {
 				...state,
-				firstName: action.payload.birthDate
+				birthDate: action.payload.birthDate
 			}
 		case USER_REGISTER_SET_ADDRESS:
 			return {
 				...state,
-				firstName: action.payload.address
+				address: action.payload.address
 			}
 		case USER_REGISTER_SET_GENDER:
 			return {
 				...state,
-				firstName: action.payload.gender
+				gender: action.payload.gender
 			}
 		case USER_REGISTER_SET_ERROR_MESSAGE:
 			return {
@@ -91,3 +88,5 @@ const userRegisterReducer = (state = initialState, action) => {
 			return state
 	}
 }
+
+export default userRegister

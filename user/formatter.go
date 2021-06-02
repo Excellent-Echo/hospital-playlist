@@ -12,6 +12,7 @@ type UserFormat struct {
 	TanggalLahir time.Time `json:"tanggal_lahir"`
 	Alamat       string    `json:"alamat"`
 	JenisKelamin string    `json:"jenis_kelamin"`
+	Role         string    `json:"role"`
 }
 
 type DeleteFormat struct {
@@ -21,11 +22,12 @@ type DeleteFormat struct {
 
 func FormatUser(user entity.User) UserFormat {
 	var formatUser = UserFormat{
-		ID:           user.ID,
-		Email:        user.Email,
-		NamaLengkap:  user.NamaLengkap,
-		Alamat:       user.Alamat,
-		JenisKelamin: user.JenisKelamin,
+		ID:          user.ID,
+		Email:       user.Email,
+		NamaLengkap: user.NamaLengkap,
+		// Alamat:       user.Alamat,
+		// JenisKelamin: user.JenisKelamin,
+		Role: user.Role,
 	}
 
 	return formatUser

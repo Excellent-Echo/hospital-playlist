@@ -8,7 +8,6 @@ import {
 	USER_REGISTER_SET_GENDER,
 	USER_REGISTER_SET_EMAIL,
 	USER_REGISTER_SET_PASSWORD,
-	USER_REGISTER_SET_PASSWORD,
 	USER_REGISTER_SET_ERROR_MESSAGE,
 	USER_REGISTER_SET_SUCCESS_MESSAGE,
 	USER_REGISTER_START_LOADING,
@@ -113,10 +112,11 @@ const register = (email, password, fullName, birthDate, address, gender) => asyn
 		const submitData = {
 			email: email,
 			password: password,
-			fullName: fullName,
-			birthDate: birthDate,
-			address: address,
-			gender: gender
+			nama_lengkap: fullName,
+			tanggal_lahir: birthDate,
+			alamat: address,
+			jenis_kelamin: gender,
+			role: 'patient'
 		}
 
 		const user = await HospitalAPI({

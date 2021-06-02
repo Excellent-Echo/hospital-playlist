@@ -22,11 +22,12 @@ type LoginUserInput struct {
 
 type UserInput struct {
 	Email        string    `json:"email"`
-	Password     string    `json:"-"`
+	Password     string    `json:"password"`
 	NamaLengkap  string    `json:"nama_lengkap"`
 	TanggalLahir time.Time `json:"tanggal_lahir"`
 	Alamat       string    `json:"alamat"`
 	JenisKelamin string    `json:"jenis_kelamin"`
+	Role         string    `json:"role"`
 }
 
 type UpdateUser struct {

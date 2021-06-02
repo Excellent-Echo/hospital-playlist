@@ -1,25 +1,73 @@
 import React from 'react'
-import { Form, Button, Container } from 'react-bootstrap'
+import { Link, useHistory } from 'react-router-dom'
+import { Form, Container, Alert } from 'react-bootstrap'
+
+import { useSelector, useDispatch } from 'react-redux'
+
+import userLoginAction from '../redux/actions/userLogin'
 
 const Login = () => {
-	return (
-		<Container>
-			<Form>
-				<Form.Group controlId="formBasicEmail">
-					<Form.Label>Email address</Form.Label>
-					<Form.Control type="email" placeholder="Enter email" />
-					<Form.Text className="text-muted">We'll never share your email with anyone else.</Form.Text>
-				</Form.Group>
+	const userLoginData = useSelector((state) => state.userLogin)
+	const dispatch = useDispatch()
+	const history = useHistory()
 
-				<Form.Group controlId="formBasicPassword">
-					<Form.Label>Password</Form.Label>
-					<Form.Control type="password" placeholder="Password" />
-				</Form.Group>
-				<Button variant="primary" type="submit">
-					Submit
-				</Button>
-			</Form>
-		</Container>
+	const loginSubmitHandler = (e) => {
+		e.preventDefault()
+
+		dispatch(userLoginAction.login(userLoginData.email, userLoginData.password, history))
+	}
+
+	return (
+		<>
+			<Link to="/">Home</Link>
+			<Container>
+				<pre>{JSON.stringify(userLoginData)}</pre>
+				{/* Error Message */}
+				{userLoginData.errorMessage && (
+					<Alert variant="danger">
+						<ul>
+							{userLoginData.errorMessage.map((error, index) => {
+								return <li key={index}>{error}</li>
+							})}
+						</ul>
+					</Alert>
+				)}
+				<Form onSubmit={loginSubmitHandler}>
+					<Form.Group controlId="exampleForm.ControlInput1">
+						<Form.Label>Email</Form.Label>
+						<Form.Control
+							type="email"
+							placeholder="Email"
+							required
+							value={userLoginData.email}
+							onChange={(e) => {
+								dispatch(userLoginAction.setEmail(e.target.value))
+							}}
+						/>
+					</Form.Group>
+					<Form.Group controlId="exampleForm.ControlInput1">
+						<Form.Label>Password</Form.Label>
+						<Form.Control
+							type="password"
+							placeholder="Password"
+							required
+							value={userLoginData.password}
+							onChange={(e) => {
+								dispatch(userLoginAction.setPassword(e.target.value))
+							}}
+						/>
+					</Form.Group>
+
+					<Form.Group controlId="exampleForm.ControlTextarea1" className="mt-3">
+						<Form.Control
+							type="submit"
+							value={userLoginData.isLoading ? 'Loading...' : 'Login'}
+							disabled={userLoginData.isLoading ? true : false}
+						/>
+					</Form.Group>
+				</Form>
+			</Container>
+		</>
 	)
 }
 

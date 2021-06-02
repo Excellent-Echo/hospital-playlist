@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Navbar, Form, Button } from 'react-bootstrap'
+import { Nav, Navbar, Form, Button } from 'react-bootstrap'
 
 const NavbarMenu = () => {
 	return (
@@ -15,8 +15,12 @@ const NavbarMenu = () => {
 					</Nav.Link>
 				</Nav>
 				<Form inline>
-					<Button variant="outline-info">Login</Button>
-					<Button variant="outline-info">Register</Button>
+					<Button variant="outline-info" as={Link} to="/login">
+						Login
+					</Button>
+					<Button variant="outline-info" as={Link} to="/register">
+						Register
+					</Button>
 				</Form>
 			</Navbar>
 		</div>
