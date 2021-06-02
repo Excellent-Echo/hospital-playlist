@@ -34,14 +34,14 @@ func (s *service) GetAllRoom() ([]entity.Room, error) {
 }
 
 func (s *service) GetRoomByID(ID string) (entity.Room, error) {
-	room, err := s.repository.FindBySpesialistID(ID)
+	room, err := s.repository.FindByRoomID(ID)
 
 	if err != nil {
 		return room, err
 	}
 
 	if room.ID == 0 {
-		errStatus := fmt.Sprintf("userdetail for user id %s not created", ID)
+		errStatus := fmt.Sprintf("room id %s not created", ID)
 		return room, errors.New(errStatus)
 	}
 
@@ -69,7 +69,7 @@ func (s *service) UpdateRoomByID(ID string, dataInput entity.RoomInput) (entity.
 		return entity.Room{}, err
 	}
 
-	room, err := s.repository.FindBySpesialistID(ID)
+	room, err := s.repository.FindByRoomID(ID)
 
 	if err != nil {
 		return entity.Room{}, err

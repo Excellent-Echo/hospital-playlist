@@ -4,23 +4,23 @@ import (
 	"hospital-playlist/auth"
 	"hospital-playlist/entity"
 	"hospital-playlist/helper"
-	"hospital-playlist/room"
+	"hospital-playlist/medicine"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-type roomHandler struct {
-	roomService room.Service
-	authService auth.Service
+type medicineHandler struct {
+	medicineService medicine.Service
+	authService     auth.Service
 }
 
-func NewRoomHandler(roomService room.Service, authService auth.Service) *roomHandler {
-	return &roomHandler{roomService, authService}
+func NewMedicineHandler(medicineService medicine.Service, authService auth.Service) *medicineHandler {
+	return &medicineHandler{medicineService, authService}
 }
 
-func (h *roomHandler) GetAllRoomHandler(c *gin.Context) {
-	rooms, err := h.roomService.GetAllRoom()
+func (h *medicineHandler) GetAllMedicineHandler(c *gin.Context) {
+	medicines, err := h.medicineService.GetAllMedicine()
 
 	if err != nil {
 		responseError := helper.APIResponse("internal server error", 500, "error", gin.H{"error": err.Error()})
@@ -29,14 +29,14 @@ func (h *roomHandler) GetAllRoomHandler(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("success get all room", 200, "success", rooms)
+	response := helper.APIResponse("success get all room", 200, "success", medicines)
 	c.JSON(200, response)
 }
 
-func (h *roomHandler) GetRoomByIDHandler(c *gin.Context) {
-	id := c.Params.ByName("room_id")
+func (h *medicineHandler) GetMedicineByIDHandler(c *gin.Context) {
+	id := c.Params.ByName("medicine_id")
 
-	room, err := h.roomService.GetRoomByID(id)
+	medicine, err := h.medicineService.GetMedicineByID(id)
 
 	if err != nil {
 		responseError := helper.APIResponse("error bad request room ID", 400, "error", gin.H{"error": err.Error()})
@@ -45,14 +45,14 @@ func (h *roomHandler) GetRoomByIDHandler(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("success get room by ID", 200, "success", room)
+	response := helper.APIResponse("success get medicine by ID", 200, "success", medicine)
 	c.JSON(200, response)
 }
 
-func (h *roomHandler) SaveNewRoomHandler(c *gin.Context) {
-	var inputRoom entity.RoomInput
+func (h *medicineHandler) SaveNewMedicineHandler(c *gin.Context) {
+	var inputMedicine entity.MedicineInput
 
-	if err := c.ShouldBindJSON(&inputRoom); err != nil {
+	if err := c.ShouldBindJSON(&inputMedicine); err != nil {
 		splitError := helper.SplitErrorInformation(err)
 		responseError := helper.APIResponse("input data required", 400, "bad request", gin.H{"errors": splitError})
 
@@ -60,7 +60,7 @@ func (h *roomHandler) SaveNewRoomHandler(c *gin.Context) {
 		return
 	}
 
-	newRoom, err := h.roomService.SaveNewRoom(inputRoom)
+	newMedicine, err := h.medicineService.SaveNewMedicine(inputMedicine)
 
 	if err != nil {
 		responseError := helper.APIResponse("internal server error", 500, "error", gin.H{"error": err.Error()})
@@ -69,16 +69,16 @@ func (h *roomHandler) SaveNewRoomHandler(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("success create new Room", 201, "status Created", newRoom)
+	response := helper.APIResponse("success create new Medicine", 201, "status Created", newMedicine)
 	c.JSON(201, response)
 }
 
-func (h *roomHandler) UpdateRoomByIDHandler(c *gin.Context) {
-	id := c.Params.ByName("room_id")
+func (h *medicineHandler) UpdateMedicineByIDHandler(c *gin.Context) {
+	id := c.Params.ByName("medicine_id")
 
-	var updateRoomInput entity.RoomInput
+	var updateMedicineInput entity.MedicineInput
 
-	if err := c.ShouldBindJSON(&updateRoomInput); err != nil {
+	if err := c.ShouldBindJSON(&updateMedicineInput); err != nil {
 		splitError := helper.SplitErrorInformation(err)
 		responseError := helper.APIResponse("input data required", 400, "bad request", gin.H{"errors": splitError})
 
@@ -98,7 +98,7 @@ func (h *roomHandler) UpdateRoomByIDHandler(c *gin.Context) {
 		return
 	}
 
-	user, err := h.roomService.UpdateRoomByID(id, updateRoomInput)
+	user, err := h.medicineService.UpdateMedicineByID(id, updateMedicineInput)
 	if err != nil {
 		responseError := helper.APIResponse("internal server error", 500, "error", gin.H{"error": err.Error()})
 
@@ -106,6 +106,6 @@ func (h *roomHandler) UpdateRoomByIDHandler(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("success update room by ID", 200, "success", user)
+	response := helper.APIResponse("success update medicine by ID", 200, "success", user)
 	c.JSON(200, response)
 }

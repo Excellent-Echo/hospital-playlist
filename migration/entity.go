@@ -44,6 +44,7 @@ type User struct {
 	TanggalLahir time.Time    `json:"tanggal_lahir"`
 	Alamat       string       `json:"alamat"`
 	JenisKelamin string       `json:"jenis_kelamin"`
+	Role         string       `json:"role"`
 	CreatedAt    time.Time    `json:"created_at"`
 	UpdatedAt    time.Time    `json:"updated_at"`
 	DeletedAt    time.Time    `gorm:"index" json:"-"`

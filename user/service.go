@@ -93,6 +93,7 @@ func (s *service) SaveNewUser(user entity.UserInput, email string) (UserFormat, 
 		Alamat:       user.Alamat,
 		TanggalLahir: user.TanggalLahir,
 		JenisKelamin: user.JenisKelamin,
+		Role:         "Pasien",
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
 	}
@@ -124,6 +125,7 @@ func (s *service) GetUserByID(userID string) (UserFormat, error) {
 		TanggalLahir: user.TanggalLahir,
 		Alamat:       user.Alamat,
 		JenisKelamin: user.JenisKelamin,
+		Role:         user.Role,
 	}
 
 	if user.ID == 0 {

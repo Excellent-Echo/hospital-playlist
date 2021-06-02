@@ -7,7 +7,7 @@ import (
 )
 
 type Repository interface {
-	FindBySpesialistID(roomID string) (entity.Room, error)
+	FindByRoomID(roomID string) (entity.Room, error)
 	Create(input entity.Room) (entity.Room, error)
 	FindAll() ([]entity.Room, error)
 	UpdateByID(ID string, dataUpdate map[string]interface{}) (entity.Room, error)
@@ -31,7 +31,7 @@ func (r *repository) FindAll() ([]entity.Room, error) {
 	return rooms, nil
 }
 
-func (r *repository) FindBySpesialistID(roomID string) (entity.Room, error) {
+func (r *repository) FindByRoomID(roomID string) (entity.Room, error) {
 	var room entity.Room
 
 	if err := r.db.Where("spesialist_id = ?", roomID).Find(&room).Error; err != nil {

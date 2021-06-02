@@ -45,4 +45,5 @@ func Middleware(userService user.Service, authService auth.Service) gin.HandlerF
 		c.Set("currentUser", pasienID)
 		// -
 	}
+
 }
