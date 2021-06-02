@@ -12,7 +12,7 @@ import (
 
 type Service interface {
 	GetAllUser() ([]UserFormat, error)
-	SaveNewUser(user entity.UserInput) (UserFormat, error)
+	SaveNewUser(user entity.UserInput, email string) (UserFormat, error)
 	GetUserByID(userID string) (UserFormat, error)
 	DeleteUserByID(userID string) (interface{}, error)
 	UpdateUserByID(userID string, dataInput entity.UpdateUser) (UserFormat, error)
@@ -48,7 +48,7 @@ func (s *service) LoginUser(input entity.LoginUserInput) (entity.User, error) {
 }
 
 func (s *service) GetAllUser() ([]UserFormat, error) {
-	// bisns logic
+	// bisnis logic
 	users, err := s.repository.FindAll()
 	var formatUsers []UserFormat
 
@@ -64,16 +64,31 @@ func (s *service) GetAllUser() ([]UserFormat, error) {
 	return formatUsers, nil
 }
 
-func (s *service) SaveNewUser(user entity.UserInput) (UserFormat, error) {
+func (s *service) SaveNewUser(user entity.UserInput, email string) (UserFormat, error) {
 	genPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.MinCost)
 
 	if err != nil {
 		return UserFormat{}, err
 	}
 
+	checkStatus, err := s.repository.FindByEmail(email)
+	formatEmail := FormatUser(checkStatus)
+
+	if err != nil {
+		return formatEmail, err
+	}
+
+	if formatEmail.Email == email || len(formatEmail.Email) == 1 {
+		// errorStatus := fmt.Sprintf("this email :%s has been created", email)
+		// return formatEmail, errors.New(errorStatus)
+		test := formatEmail.Email == email
+		test1 := fmt.Sprintf("%t", test)
+		return formatEmail, errors.New(test1)
+	}
+
 	var newUser = entity.User{
 		NamaLengkap:  user.NamaLengkap,
-		Email:        user.Email,
+		Email:        email,
 		Password:     string(genPassword),
 		Alamat:       user.Alamat,
 		TanggalLahir: user.TanggalLahir,

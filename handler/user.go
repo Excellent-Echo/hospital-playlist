@@ -37,6 +37,7 @@ func (h *userHandler) ShowUserHandler(c *gin.Context) {
 // CreateUserHandler for handing if user / external create new user from route "/users"
 func (h *userHandler) CreateUserHandler(c *gin.Context) {
 	var inputUser entity.UserInput
+	var inputEmail string
 
 	if err := c.ShouldBindJSON(&inputUser); err != nil {
 		splitError := helper.SplitErrorInformation(err)
@@ -46,7 +47,7 @@ func (h *userHandler) CreateUserHandler(c *gin.Context) {
 		return
 	}
 
-	newUser, err := h.userService.SaveNewUser(inputUser)
+	newUser, err := h.userService.SaveNewUser(inputUser, inputEmail)
 	if err != nil {
 		responseError := helper.APIResponse("internal server error", 500, "error", gin.H{"error": err.Error()})
 
@@ -90,11 +91,11 @@ func (h *userHandler) DeleteUserByIDHandler(c *gin.Context) {
 }
 
 func (h *userHandler) UpdateUserByIDHandler(c *gin.Context) {
-	id := c.Params.ByName("pasien_id")
+	id := c.Params.ByName("user_id")
 
-	var updatePasienInput entity.UpdateUser
+	var updateUserInput entity.UpdateUser
 
-	if err := c.ShouldBindJSON(&updatePasienInput); err != nil {
+	if err := c.ShouldBindJSON(&updateUserInput); err != nil {
 		splitError := helper.SplitErrorInformation(err)
 		responseError := helper.APIResponse("input data required", 400, "bad request", gin.H{"errors": splitError})
 
@@ -105,16 +106,16 @@ func (h *userHandler) UpdateUserByIDHandler(c *gin.Context) {
 	idParam, _ := strconv.Atoi(id)
 
 	// authorization userid dari params harus sama dengan user id yang login
-	patientData := int(c.MustGet("currentPatient").(int))
+	UserData := int(c.MustGet("currentUser").(int))
 
-	if idParam != patientData {
+	if idParam != UserData {
 		responseError := helper.APIResponse("Unauthorize", 401, "error", gin.H{"error": "user ID not authorize"})
 
 		c.JSON(401, responseError)
 		return
 	}
 
-	patient, err := h.userService.UpdateUserByID(id, updatePasienInput)
+	user, err := h.userService.UpdateUserByID(id, updateUserInput)
 	if err != nil {
 		responseError := helper.APIResponse("internal server error", 500, "error", gin.H{"error": err.Error()})
 
@@ -122,7 +123,7 @@ func (h *userHandler) UpdateUserByIDHandler(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("success update user by ID", 200, "success", patient)
+	response := helper.APIResponse("success update user by ID", 200, "success", user)
 	c.JSON(200, response)
 }
 

@@ -12,7 +12,7 @@ type User struct {
 	JenisKelamin string    `json:"jenis_kelamin"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
-	Role         string    `json:"role"`
+	// Role         string    `json:"role"`
 }
 
 type LoginUserInput struct {
