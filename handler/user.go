@@ -83,6 +83,29 @@ func (h *userHandler) GetUserByIDHandler(c *gin.Context) {
 	c.JSON(200, response)
 }
 
+func (h *userHandler) GetUserByRoleDocterHandler(c *gin.Context) {
+	role := c.Params.ByName("role")
+	if role == "" {
+		responseError := helper.APIResponse("error bad request user ID", 400, "error", gin.H{"error": "this user does not have the authority"})
+
+		c.JSON(400, responseError)
+		return
+	}
+
+	dockter, err := h.userService.GetUserByRoleDocter(role)
+
+	if err != nil {
+		responseError := helper.APIResponse("error bad request user ID", 400, "error", gin.H{"error": err.Error()})
+
+		c.JSON(400, responseError)
+		return
+	}
+
+	response := helper.APIResponse("success get user by ID", 200, "success", dockter)
+	c.JSON(200, response)
+
+}
+
 func (h *userHandler) DeleteUserByIDHandler(c *gin.Context) {
 	id := c.Params.ByName("user_id")
 
@@ -109,7 +132,7 @@ func (h *userHandler) DeleteUserByIDHandler(c *gin.Context) {
 }
 
 func (h *userHandler) UpdateUserByIDHandler(c *gin.Context) {
-	id := c.Params.ByName("pasien_id")
+	id := c.Params.ByName("user_id")
 
 	var updatePasienInput entity.UpdateUser
 

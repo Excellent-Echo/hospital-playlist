@@ -21,7 +21,7 @@ type CreateUser struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	FullName string `json:"full_name"`
-	Role     string `json:"role"`
+	// Role     string `json:"role"`
 	// TanggalLahir time.Time `json:"tanggal_lahir"`
 	// Alamat       string    `json:"alamat"`
 	// JenisKelamin string    `json:"jenis_kelamin"`

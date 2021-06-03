@@ -43,9 +43,9 @@ type Room struct {
 }
 
 type Specialist struct {
-	ID   int    `gorm:"primaryKey" json:"id"`
-	Name string `json:"name"`
-	// User      []User    `gorm:"foreignKey:MedicalSpecialistID"`
+	ID        int       `gorm:"primaryKey" json:"id"`
+	Name      string    `json:"name"`
+	User      []User    `gorm:"foreignKey:SpecialistID"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `gorm:"index" json:"-"`
