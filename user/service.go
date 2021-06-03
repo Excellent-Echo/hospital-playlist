@@ -12,11 +12,11 @@ import (
 
 type Service interface {
 	GetAllUser() ([]UserFormat, error)
-	SaveNewUser(user entity.UserInput) (UserFormat, error)
+	SaveNewUser(user entity.CreateUser) (UserFormat, error)
 	GetUserByID(userID string) (UserFormat, error)
 	DeleteUserByID(userID string) (interface{}, error)
 	UpdateUserByID(userID string, dataInput entity.UpdateUser) (UserFormat, error)
-	LoginUser(input entity.LoginUserInput) (entity.User, error)
+	LoginUser(input entity.LoginUser) (entity.User, error)
 }
 
 type service struct {
@@ -27,7 +27,7 @@ func NewService(repo Repository) *service {
 	return &service{repo}
 }
 
-func (s *service) LoginUser(input entity.LoginUserInput) (entity.User, error) {
+func (s *service) LoginUser(input entity.LoginUser) (entity.User, error) {
 	user, err := s.repository.FindByEmail(input.Email)
 
 	if err != nil {
@@ -64,26 +64,24 @@ func (s *service) GetAllUser() ([]UserFormat, error) {
 	return formatUsers, nil
 }
 
-func (s *service) SaveNewUser(user entity.UserInput) (UserFormat, error) {
+func (s *service) SaveNewUser(user entity.CreateUser) (UserFormat, error) {
 	genPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.MinCost)
 
 	if err != nil {
 		return UserFormat{}, err
 	}
 
-	var newPatient = entity.User{
-		NamaLengkap:  user.NamaLengkap,
-		Email:        user.Email,
-		Password:     string(genPassword),
-		Alamat:       user.Alamat,
-		TanggalLahir: user.TanggalLahir,
-		JenisKelamin: user.JenisKelamin,
-		CreatedAt:    time.Now(),
+	var newUser = entity.User{
+		Email:     user.Email,
+		Password:  string(genPassword),
+		FullName:  user.FullName,
+		Role:      user.Role,
+		CreatedAt: time.Now(),
 		// UpdatedAt:    time.Now(),
-		Role: user.Role,
+
 	}
 
-	createUser, err := s.repository.Create(newPatient)
+	createUser, err := s.repository.Create(newUser)
 	formatUser := FormatUser(createUser)
 
 	if err != nil {
@@ -104,12 +102,10 @@ func (s *service) GetUserByID(userID string) (UserFormat, error) {
 	}
 
 	var userData = entity.User{
-		ID:           user.ID,
-		Email:        user.Email,
-		NamaLengkap:  user.NamaLengkap,
-		TanggalLahir: user.TanggalLahir,
-		Alamat:       user.Alamat,
-		JenisKelamin: user.JenisKelamin,
+		ID:       user.ID,
+		Email:    user.Email,
+		FullName: user.FullName,
+		Role:     user.Role,
 	}
 
 	if user.ID == 0 {
@@ -117,9 +113,9 @@ func (s *service) GetUserByID(userID string) (UserFormat, error) {
 		return UserFormat{}, errors.New(newError)
 	}
 
-	formatPasien := FormatUser(userData)
+	formatGetUser := FormatUser(userData)
 
-	return formatPasien, nil
+	return formatGetUser, nil
 
 }
 
@@ -158,32 +154,32 @@ func (s *service) UpdateUserByID(userID string, dataInput entity.UpdateUser) (Us
 		return UserFormat{}, err
 	}
 
-	patient, err := s.repository.FindByID(userID)
+	user, err := s.repository.FindByID(userID)
 
 	if err != nil {
 		return UserFormat{}, err
 	}
 
-	if patient.ID == 0 {
-		newError := fmt.Sprintf("patient id %s not found", userID)
+	if user.ID == 0 {
+		newError := fmt.Sprintf("user id %s not found", userID)
 		return UserFormat{}, errors.New(newError)
 	}
 
-	if dataInput.NamaLengkap != "" || len(dataInput.NamaLengkap) != 0 {
-		dataUpdate["nama_pasien"] = dataInput.NamaLengkap
-	}
+	// if dataInput.NamaLengkap != "" || len(dataInput.NamaLengkap) != 0 {
+	// 	dataUpdate["nama_pasien"] = dataInput.NamaLengkap
+	// }
 
 	if dataInput.Email != "" || len(dataInput.Email) != 0 {
 		dataUpdate["email"] = dataInput.Email
 	}
 
-	if dataInput.Alamat != "" || len(dataInput.Alamat) != 0 {
-		dataUpdate["alamat"] = dataInput.Alamat
-	}
+	// if dataInput.Alamat != "" || len(dataInput.Alamat) != 0 {
+	// 	dataUpdate["alamat"] = dataInput.Alamat
+	// }
 
-	if dataInput.JenisKelamin != "" || len(dataInput.JenisKelamin) != 0 {
-		dataUpdate["jenis_kelamin"] = dataInput.JenisKelamin
-	}
+	// if dataInput.JenisKelamin != "" || len(dataInput.JenisKelamin) != 0 {
+	// 	dataUpdate["jenis_kelamin"] = dataInput.JenisKelamin
+	// }
 
 	// if dataInput.TanggalLahir != "00/00/000" {
 
@@ -193,13 +189,13 @@ func (s *service) UpdateUserByID(userID string, dataInput entity.UpdateUser) (Us
 
 	// fmt.Println(dataUpdate)
 
-	patientUpdated, err := s.repository.UpdateByID(userID, dataUpdate)
+	userUpdated, err := s.repository.UpdateByID(userID, dataUpdate)
 
 	if err != nil {
 		return UserFormat{}, err
 	}
 
-	formatUser := FormatUser(patientUpdated)
+	formatUser := FormatUser(userUpdated)
 
 	return formatUser, nil
 }

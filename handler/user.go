@@ -36,9 +36,9 @@ func (h *userHandler) ShowUserHandler(c *gin.Context) {
 
 // CreateUserHandler for handing if user / external create new user from route "/users"
 func (h *userHandler) CreateUserHandler(c *gin.Context) {
-	var inputUser entity.UserInput
+	var createUser entity.CreateUser
 
-	if err := c.ShouldBindJSON(&inputUser); err != nil {
+	if err := c.ShouldBindJSON(&createUser); err != nil {
 		splitError := helper.SplitErrorInformation(err)
 		responseError := helper.APIResponse("input data required", 400, "bad request", gin.H{"errors": splitError})
 
@@ -46,7 +46,7 @@ func (h *userHandler) CreateUserHandler(c *gin.Context) {
 		return
 	}
 
-	newUser, err := h.userService.SaveNewUser(inputUser)
+	newUser, err := h.userService.SaveNewUser(createUser)
 	if err != nil {
 		responseError := helper.APIResponse("internal server error", 500, "error", gin.H{"error": err.Error()})
 
@@ -61,7 +61,17 @@ func (h *userHandler) CreateUserHandler(c *gin.Context) {
 func (h *userHandler) GetUserByIDHandler(c *gin.Context) {
 	id := c.Params.ByName("user_id")
 
+	userLoginID := c.MustGet("currentUser").(int)
+
+	if userID, _ := strconv.Atoi(id); userID != userLoginID {
+		responseError := helper.APIResponse("error bad request user ID", 400, "error", gin.H{"error": "this user does not have the authority"})
+
+		c.JSON(400, responseError)
+		return
+	}
+
 	user, err := h.userService.GetUserByID(id)
+
 	if err != nil {
 		responseError := helper.APIResponse("error bad request user ID", 400, "error", gin.H{"error": err.Error()})
 
@@ -75,6 +85,15 @@ func (h *userHandler) GetUserByIDHandler(c *gin.Context) {
 
 func (h *userHandler) DeleteUserByIDHandler(c *gin.Context) {
 	id := c.Params.ByName("user_id")
+
+	userLoginID := c.MustGet("currentUser").(int)
+
+	if userID, _ := strconv.Atoi(id); userID != userLoginID {
+		responseError := helper.APIResponse("error bad request user ID", 400, "error", gin.H{"error": "this user does not have the authority"})
+
+		c.JSON(400, responseError)
+		return
+	}
 
 	user, err := h.userService.DeleteUserByID(id)
 
@@ -105,16 +124,16 @@ func (h *userHandler) UpdateUserByIDHandler(c *gin.Context) {
 	idParam, _ := strconv.Atoi(id)
 
 	// authorization userid dari params harus sama dengan user id yang login
-	patientData := int(c.MustGet("currentPatient").(int))
+	userData := int(c.MustGet("currentUser").(int)) // perlu diperbaiki
 
-	if idParam != patientData {
+	if idParam != userData {
 		responseError := helper.APIResponse("Unauthorize", 401, "error", gin.H{"error": "user ID not authorize"})
 
 		c.JSON(401, responseError)
 		return
 	}
 
-	patient, err := h.userService.UpdateUserByID(id, updatePasienInput)
+	user, err := h.userService.UpdateUserByID(id, updatePasienInput)
 	if err != nil {
 		responseError := helper.APIResponse("internal server error", 500, "error", gin.H{"error": err.Error()})
 
@@ -122,7 +141,7 @@ func (h *userHandler) UpdateUserByIDHandler(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("success update user by ID", 200, "success", patient)
+	response := helper.APIResponse("success update user by ID", 200, "success", user)
 	c.JSON(200, response)
 }
 
@@ -131,9 +150,9 @@ func (h *userHandler) UpdateUserByIDHandler(c *gin.Context) {
 // pengecekan apakah password di database sama dengan password yang dikirim (bcrypt)
 // kita menggunakan generate token ke handler (response)
 func (h *userHandler) LoginUserHandler(c *gin.Context) {
-	var inputLoginPasien entity.LoginUserInput
+	var loginUser entity.LoginUser
 
-	if err := c.ShouldBindJSON(&inputLoginPasien); err != nil {
+	if err := c.ShouldBindJSON(&loginUser); err != nil {
 		splitError := helper.SplitErrorInformation(err)
 		responseError := helper.APIResponse("input data required", 400, "bad request", gin.H{"errors": splitError})
 
@@ -141,7 +160,7 @@ func (h *userHandler) LoginUserHandler(c *gin.Context) {
 		return
 	}
 
-	pasienData, err := h.userService.LoginUser(inputLoginPasien)
+	userData, err := h.userService.LoginUser(loginUser)
 
 	if err != nil {
 		responseError := helper.APIResponse("input data error", 401, "error", gin.H{"errors": err})
@@ -150,13 +169,13 @@ func (h *userHandler) LoginUserHandler(c *gin.Context) {
 		return
 	}
 
-	token, err := h.authService.GenerateToken(pasienData.ID)
+	token, err := h.authService.GenerateToken(userData.ID)
 	if err != nil {
 		responseError := helper.APIResponse("internal server error", 500, "error", gin.H{"errors": err})
 
 		c.JSON(401, responseError)
 		return
 	}
-	response := helper.APIResponse("success login user", 200, "success", gin.H{"token": token})
+	response := helper.APIResponse("success login user", 200, "success", gin.H{"token": token, "role": userData.Role})
 	c.JSON(200, response)
 }
