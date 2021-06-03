@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"hospital-playlist/entity"
 	"hospital-playlist/helper"
+	"hospital-playlist/userDetail"
+	"hospital-playlist/userProfile"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -20,11 +22,13 @@ type Service interface {
 }
 
 type service struct {
-	repository Repository
+	repository            Repository
+	repositoryUserDetail  userDetail.Repository
+	repositoryUserProfile userProfile.Repository
 }
 
-func NewService(repo Repository) *service {
-	return &service{repo}
+func NewService(repo Repository, repositoryUserDetail userDetail.Repository, repositoryUserProfile userProfile.Repository) *service {
+	return &service{repo, repositoryUserDetail, repositoryUserProfile}
 }
 
 func (s *service) LoginUser(input entity.LoginUser) (entity.User, error) {
@@ -75,7 +79,6 @@ func (s *service) SaveNewUser(user entity.CreateUser) (UserFormat, error) {
 		Email:     user.Email,
 		Password:  string(genPassword),
 		FullName:  user.FullName,
-		Role:      user.Role,
 		CreatedAt: time.Now(),
 		// UpdatedAt:    time.Now(),
 
@@ -105,7 +108,6 @@ func (s *service) GetUserByID(userID string) (UserFormat, error) {
 		ID:       user.ID,
 		Email:    user.Email,
 		FullName: user.FullName,
-		Role:     user.Role,
 	}
 
 	if user.ID == 0 {

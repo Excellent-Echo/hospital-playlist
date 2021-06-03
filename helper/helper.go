@@ -50,3 +50,10 @@ func ValidateIDNumber(ID string) error {
 
 	return nil
 }
+func ValidateString(str string) error {
+	var err []string
+	if err != nil || str == "" {
+		return errors.New("input must be a valid id")
+	}
+	return nil
+}

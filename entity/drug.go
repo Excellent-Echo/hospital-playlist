@@ -3,19 +3,16 @@ package entity
 import "time"
 
 type Drug struct {
-	ID        int       `gorm:"primaryKey" json:"id"`
-	Name      string    `json:"name"`
-	Price     int       `json:"price"`
+	ID    int    `gorm:"primaryKey" json:"id"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
+	// Bookings  []Booking `gorm:"many2many:booking_obat"`
 	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt time.Time `gorm:"index" json:"-"`
 }
 
-type CreateDrug struct {
-	Name      string    `json:"name" binding:"required"`
-	Price     int       `json:"price" binding:"required"`
-	CreatedAt time.Time `json:"created_at"`
-}
-
-type UpdateDrug struct {
+type DrugInput struct {
 	Name  string `json:"name"`
 	Price int    `json:"price"`
 }

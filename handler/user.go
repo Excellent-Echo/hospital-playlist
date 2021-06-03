@@ -109,7 +109,7 @@ func (h *userHandler) DeleteUserByIDHandler(c *gin.Context) {
 }
 
 func (h *userHandler) UpdateUserByIDHandler(c *gin.Context) {
-	id := c.Params.ByName("pasien_id")
+	id := c.Params.ByName("user_id")
 
 	var updatePasienInput entity.UpdateUser
 
@@ -176,6 +176,6 @@ func (h *userHandler) LoginUserHandler(c *gin.Context) {
 		c.JSON(401, responseError)
 		return
 	}
-	response := helper.APIResponse("success login user", 200, "success", gin.H{"token": token, "role": userData.Role})
+	response := helper.APIResponse("success login user", 200, "success", gin.H{"token": token})
 	c.JSON(200, response)
 }

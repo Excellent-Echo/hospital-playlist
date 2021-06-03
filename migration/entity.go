@@ -7,13 +7,22 @@ type User struct {
 	Email     string    `gorm:"unique" json:"email"`
 	Password  string    `json:"-"`
 	FullName  string    `json:"full_name"`
-	Role      string    `json:"role"`
+	Bookings  []Booking `gorm:"foreignKey:UserID"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `gorm:"index" json:"-"`
-	// Specialists []Specialist `gorm:"foreignKey:UserID" json:"spesialis"`
-	// Medicines   []Medicine   `gorm:"foreignKey:UserID" json:"medicine"`
-	// Rooms       []Room       `gorm:"foreignKey:UserID" json:"room"`
+}
+
+type Dokter struct {
+	ID           int       `gorm:"primaryKey" json:"id"`
+	Email        string    `gorm:"unique" json:"email"`
+	Password     string    `json:"-"`
+	FullName     string    `json:"full_name"`
+	Bookings     []Booking `gorm:"foreignKey:DokterID"`
+	SpecialistID int
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	DeletedAt    time.Time `gorm:"index" json:"-"`
 }
 
 type UserDetail struct {
@@ -34,18 +43,10 @@ type UserProfile struct {
 	UserID      int    `json:"user_id"`
 }
 
-type Room struct {
-	ID        int       `gorm:"primaryKey" json:"id"`
-	RoomType  string    `json:"room_type"`
-	Rates     int       `json:"rates"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	DeletedAt time.Time `gorm:"index" json:"-"`
-}
-
-type MedicalSpecialist struct {
+type Specialist struct {
 	ID        int       `gorm:"primaryKey" json:"id"`
 	Name      string    `json:"name"`
+	Dokters   []Dokter  `gorm:"foreignKey:SpecialistID"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `gorm:"index" json:"-"`
@@ -55,7 +56,17 @@ type Drug struct {
 	ID        int       `gorm:"primaryKey" json:"id"`
 	Name      string    `json:"name"`
 	Price     int       `json:"price"`
+	Bookings  []Booking `gorm:"many2many:booking_obat"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `gorm:"index" json:"-"`
+}
+
+type Booking struct {
+	ID          int `gorm:"primaryKey" json:"id"`
+	Date        time.Time
+	NameBooking string `json:"name_booking"`
+	UserID      int
+	DokterID    int
+	Drugs       []Drug `gorm:"many2many:booking_obat"`
 }

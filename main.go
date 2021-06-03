@@ -33,6 +33,8 @@ func main() {
 	routes.UserDetailRoute(r)
 	routes.UserProfileRoute(r)
 	routes.DrugRoute(r)
+	routes.SpesialistRoute(r)
+	routes.DokterRoute(r)
 
-	r.Run()
+	r.Run(":4444")
 }
