@@ -56,7 +56,7 @@ type Drug struct {
 	ID        int       `gorm:"primaryKey" json:"id"`
 	Name      string    `json:"name"`
 	Price     int       `json:"price"`
-	Bookings  []Booking `gorm:"many2many:booking_obat"`
+	Bookings  []Booking `gorm:"many2many:booking_obats"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `gorm:"index" json:"-"`
@@ -68,5 +68,5 @@ type Booking struct {
 	NameBooking string `json:"name_booking"`
 	UserID      int
 	DokterID    int
-	Drugs       []Drug `gorm:"many2many:booking_obat"`
+	Drugs       []Drug `gorm:"many2many:booking_obats"`
 }
