@@ -9,6 +9,7 @@ import (
 
 type Service interface {
 	GetAllDrug() ([]entity.Drug, error)
+	GetDrugByID(ID string) (entity.Drug, error)
 	SaveNewDrug(input entity.CreateDrug) (entity.Drug, error)
 	UpdateDrugByID(drugID string, dataInput entity.UpdateDrug) (entity.Drug, error)
 	// DeleteCategoryByID(categoryID string) (interface{}, error)
@@ -30,6 +31,21 @@ func (s *service) GetAllDrug() ([]entity.Drug, error) {
 	}
 
 	return drugs, nil
+}
+
+func (s *service) GetDrugByID(ID string) (entity.Drug, error) {
+	drug, err := s.repository.FindByID(ID)
+
+	if err != nil {
+		return drug, err
+	}
+
+	if drug.ID == 0 {
+		errStatus := fmt.Sprintf("userdetail for user id %s not created", ID)
+		return drug, errors.New(errStatus)
+	}
+
+	return drug, nil
 }
 
 func (s *service) SaveNewDrug(input entity.CreateDrug) (entity.Drug, error) {
