@@ -39,9 +39,9 @@ func Middleware(userService user.Service, authService auth.Service) gin.HandlerF
 			return
 		}
 
-		pasienID := int(claim["user_id"].(float64))
+		userID := int(claim["user_id"].(float64))
 
-		c.Set("currentUser", pasienID)
+		c.Set("currentUser", userID)
 		// -
 	}
 }
