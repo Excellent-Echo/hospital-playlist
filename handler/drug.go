@@ -32,6 +32,22 @@ func (h *drughandler) GetAllDrugHandler(c *gin.Context) {
 	c.JSON(200, response)
 
 }
+func (h *drughandler) GetDrugByIDHandler(c *gin.Context) {
+	id := c.Params.ByName("drug_id")
+
+	drug, err := h.drugService.GetDrugByID(id)
+
+	if err != nil {
+		responseError := helper.APIResponse("internal server error", 500, "error", gin.H{"error": err.Error()})
+
+		c.JSON(500, responseError)
+		return
+	}
+
+	response := helper.APIResponse("success get all drug", 200, "success", drug)
+	c.JSON(200, response)
+
+}
 
 func (h *drughandler) SaveNewDrugHandler(c *gin.Context) {
 

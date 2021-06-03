@@ -15,6 +15,7 @@ var (
 
 func DrugRoute(r *gin.Engine) {
 	r.GET("/drugs", drugHandler.GetAllDrugHandler)
+	r.GET("/drug/:drug_id", drugHandler.GetDrugByIDHandler)
 	r.POST("/drug", drugHandler.SaveNewDrugHandler)
 	r.PUT("/drug/:drug_id", drugHandler.UpdateDrugByIDHandler)
 }

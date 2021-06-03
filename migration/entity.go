@@ -11,9 +11,7 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `gorm:"index" json:"-"`
-	// Specialists []Specialist `gorm:"foreignKey:UserID" json:"spesialis"`
-	// Medicines   []Medicine   `gorm:"foreignKey:UserID" json:"medicine"`
-	// Rooms       []Room       `gorm:"foreignKey:UserID" json:"room"`
+	// Medicines []Drug    `gorm:"foreignKey:UserID" json:"medicine"`
 }
 
 type UserDetail struct {
@@ -38,14 +36,16 @@ type Room struct {
 	ID        int       `gorm:"primaryKey" json:"id"`
 	RoomType  string    `json:"room_type"`
 	Rates     int       `json:"rates"`
+	User      User      `gorm:"foreignKey:RommID" json:"user"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `gorm:"index" json:"-"`
 }
 
-type MedicalSpecialist struct {
-	ID        int       `gorm:"primaryKey" json:"id"`
-	Name      string    `json:"name"`
+type Specialist struct {
+	ID   int    `gorm:"primaryKey" json:"id"`
+	Name string `json:"name"`
+	// User      []User    `gorm:"foreignKey:MedicalSpecialistID"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `gorm:"index" json:"-"`

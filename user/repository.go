@@ -13,6 +13,7 @@ type Repository interface {
 	DeleteByID(ID string) (string, error)
 	UpdateByID(ID string, dataUpdate map[string]interface{}) (entity.User, error)
 	FindByEmail(email string) (entity.User, error)
+	FindBYRoleDocter(role string) (entity.User, error)
 }
 
 type repository struct {
@@ -45,6 +46,16 @@ func (r *repository) FindByID(ID string) (entity.User, error) {
 	var user entity.User
 
 	if err := r.db.Where("id = ?", ID).Find(&user).Error; err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (r *repository) FindBYRoleDocter(role string) (entity.User, error) {
+	var user entity.User
+
+	if err := r.db.Where("role = ?", role).Find(&user).Error; err != nil {
 		return user, err
 	}
 
