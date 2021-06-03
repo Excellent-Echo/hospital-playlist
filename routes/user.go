@@ -13,7 +13,7 @@ import (
 var (
 	DB             *gorm.DB = config.Connection()
 	userRepository          = user.NewRepository(DB)
-	userService             = user.NewService(userRepository)
+	userService             = user.NewService(userRepository, userDetailRepository, userProfileRepository)
 	authService             = auth.NewService()
 	userHandler             = handler.NewUserHandler(userService, authService)
 )
@@ -23,7 +23,6 @@ func UserRoute(r *gin.Engine) {
 	r.POST("/user/register", userHandler.CreateUserHandler)
 	r.POST("/user/login", userHandler.LoginUserHandler)
 	r.GET("/user/:user_id", handler.Middleware(userService, authService), userHandler.GetUserByIDHandler)
-	r.GET("/dokter/:role", userHandler.GetUserByRoleDocterHandler)
 	r.DELETE("/user/:user_id", handler.Middleware(userService, authService), userHandler.DeleteUserByIDHandler)
 	r.PUT("/user/:user_id", handler.Middleware(userService, authService), userHandler.UpdateUserByIDHandler)
 }

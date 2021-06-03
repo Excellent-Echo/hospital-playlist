@@ -34,6 +34,7 @@ func main() {
 	routes.UserProfileRoute(r)
 	routes.DrugRoute(r)
 	routes.SpesialistRoute(r)
+	routes.DokterRoute(r)
 
 	r.Run(":4444")
 }

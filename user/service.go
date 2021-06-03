@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"hospital-playlist/entity"
 	"hospital-playlist/helper"
+	"hospital-playlist/userDetail"
+	"hospital-playlist/userProfile"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -14,18 +16,19 @@ type Service interface {
 	GetAllUser() ([]UserFormat, error)
 	SaveNewUser(user entity.CreateUser) (UserFormat, error)
 	GetUserByID(userID string) (UserFormat, error)
-	GetUserByRoleDocter(role string) (UserFormat, error)
 	DeleteUserByID(userID string) (interface{}, error)
 	UpdateUserByID(userID string, dataInput entity.UpdateUser) (UserFormat, error)
 	LoginUser(input entity.LoginUser) (entity.User, error)
 }
 
 type service struct {
-	repository Repository
+	repository            Repository
+	repositoryUserDetail  userDetail.Repository
+	repositoryUserProfile userProfile.Repository
 }
 
-func NewService(repo Repository) *service {
-	return &service{repo}
+func NewService(repo Repository, repositoryUserDetail userDetail.Repository, repositoryUserProfile userProfile.Repository) *service {
+	return &service{repo, repositoryUserDetail, repositoryUserProfile}
 }
 
 func (s *service) LoginUser(input entity.LoginUser) (entity.User, error) {
@@ -76,7 +79,6 @@ func (s *service) SaveNewUser(user entity.CreateUser) (UserFormat, error) {
 		Email:     user.Email,
 		Password:  string(genPassword),
 		FullName:  user.FullName,
-		Role:      "Pasien",
 		CreatedAt: time.Now(),
 		// UpdatedAt:    time.Now(),
 
@@ -106,7 +108,6 @@ func (s *service) GetUserByID(userID string) (UserFormat, error) {
 		ID:       user.ID,
 		Email:    user.Email,
 		FullName: user.FullName,
-		Role:     user.Role,
 	}
 
 	if user.ID == 0 {
@@ -118,35 +119,6 @@ func (s *service) GetUserByID(userID string) (UserFormat, error) {
 
 	return formatGetUser, nil
 
-}
-
-func (s *service) GetUserByRoleDocter(role string) (UserFormat, error) {
-
-	if err := helper.ValidateString(role); err != nil {
-		return UserFormat{}, err
-	}
-
-	user, err := s.repository.FindBYRoleDocter(role)
-
-	if err != nil {
-		return UserFormat{}, err
-	}
-
-	var userData = entity.User{
-		ID:       user.ID,
-		Email:    user.Email,
-		FullName: user.FullName,
-		Role:     user.Role,
-	}
-
-	if user.Role == "" {
-		newError := fmt.Sprintf("user role %s not found", role)
-		return UserFormat{}, errors.New(newError)
-	}
-
-	formatGetUser := FormatUser(userData)
-
-	return formatGetUser, nil
 }
 
 func (s *service) DeleteUserByID(userID string) (interface{}, error) {

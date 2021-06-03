@@ -34,7 +34,7 @@ func (r *repository) FindAll() ([]entity.Specialist, error) {
 func (r *repository) FindBySpesialistID(spesialistID string) (entity.Specialist, error) {
 	var spesialist entity.Specialist
 
-	if err := r.db.Where("spesialist_id = ?", spesialistID).Find(&spesialist).Error; err != nil {
+	if err := r.db.Where("id = ?", spesialistID).Find(&spesialist).Error; err != nil {
 		return spesialist, err
 	}
 

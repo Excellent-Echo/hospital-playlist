@@ -23,7 +23,6 @@ func FormatUser(user entity.User) UserFormat {
 		ID:        user.ID,
 		Email:     user.Email,
 		FullName:  user.FullName,
-		Role:      user.Role,
 		CreatedAt: user.CreatedAt,
 	}
 

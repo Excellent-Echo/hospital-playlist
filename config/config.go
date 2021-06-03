@@ -36,6 +36,8 @@ func Connection() *gorm.DB {
 	db.AutoMigrate(&migration.UserProfile{})
 	db.AutoMigrate(&migration.Drug{})
 	db.AutoMigrate(&migration.Specialist{})
+	db.AutoMigrate(&migration.Booking{})
+	db.AutoMigrate(&migration.Dokter{})
 
 	return db
 }
