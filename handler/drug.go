@@ -14,8 +14,8 @@ type drugHandler struct {
 	authService auth.Service
 }
 
-func NewDrugHandler(drugService drugs.Service, auth auth.Service) *drugHandler {
-	return &drugHandler{drugService, auth}
+func NewDrugHandler(drugService drugs.Service, authService auth.Service) *drugHandler {
+	return &drugHandler{drugService, authService}
 }
 
 func (h *drugHandler) GetAllDrugsHandler(c *gin.Context) {
@@ -28,7 +28,7 @@ func (h *drugHandler) GetAllDrugsHandler(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("success get all user", 200, "success", drugs)
+	response := helper.APIResponse("success get all drugs", 200, "success", drugs)
 	c.JSON(200, response)
 }
 
@@ -38,7 +38,7 @@ func (h *drugHandler) GetDrugByIDHandler(c *gin.Context) {
 	drug, err := h.drugService.GetSpesialistByID(id)
 
 	if err != nil {
-		responseError := helper.APIResponse("error bad request specialist ID", 400, "error", gin.H{"error": err.Error()})
+		responseError := helper.APIResponse("error bad request drug ID", 400, "error", gin.H{"error": err.Error()})
 
 		c.JSON(400, responseError)
 		return
