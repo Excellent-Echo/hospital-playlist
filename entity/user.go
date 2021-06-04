@@ -3,10 +3,11 @@ package entity
 import "time"
 
 type User struct {
-	ID        int       `gorm:"primaryKey" json:"id"`
-	Email     string    `json:"email"`
-	Password  string    `json:"-"`
-	FullName  string    `json:"full_name"`
+	ID        int    `gorm:"primaryKey" json:"id"`
+	Email     string `json:"email"`
+	Password  string `json:"-"`
+	FullName  string `json:"full_name"`
+	Bookings  []Booking
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

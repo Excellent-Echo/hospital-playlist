@@ -27,7 +27,7 @@ func NewRepository(db *gorm.DB) *repository {
 func (r *repository) FindAll() ([]entity.User, error) {
 	var users []entity.User
 
-	if err := r.db.Find(&users).Error; err != nil {
+	if err := r.db.Preload("Bookings").Find(&users).Error; err != nil {
 		return users, err
 	}
 
@@ -45,7 +45,7 @@ func (r *repository) Create(user entity.User) (entity.User, error) {
 func (r *repository) FindByID(ID string) (entity.User, error) {
 	var user entity.User
 
-	if err := r.db.Where("id = ?", ID).Find(&user).Error; err != nil {
+	if err := r.db.Preload("Bookings").Where("id = ?", ID).Find(&user).Error; err != nil {
 		return user, err
 	}
 
