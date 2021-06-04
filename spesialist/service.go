@@ -11,6 +11,7 @@ import (
 type Service interface {
 	GetAllSpesialist() ([]entity.Specialist, error)
 	GetSpesialistByID(ID string) (entity.Specialist, error)
+	GetSpecialistByNameDokter(spesialistID string) (entity.Specialist, error)
 	SaveNewSpesialist(input entity.SpecialistInput) (entity.Specialist, error)
 	UpdateSpesialistByID(ID string, dataInput entity.SpecialistInput) (entity.Specialist, error)
 }
@@ -47,6 +48,22 @@ func (s *service) GetSpesialistByID(ID string) (entity.Specialist, error) {
 	}
 
 	return specialist, nil
+}
+
+func (s *service) GetSpecialistByNameDokter(spesialistID string) (entity.Specialist, error) {
+	specialist, err := s.repository.FindSpecialistByNameDokter(spesialistID)
+
+	if err != nil {
+		return specialist, err
+	}
+
+	if specialist.ID == 0 {
+		errStatus := fmt.Sprintf("userdetail for user id %s not created", spesialistID)
+		return specialist, errors.New(errStatus)
+	}
+
+	return specialist, nil
+
 }
 
 func (s *service) SaveNewSpesialist(input entity.SpecialistInput) (entity.Specialist, error) {

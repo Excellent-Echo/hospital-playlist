@@ -37,5 +37,5 @@ func main() {
 	routes.DokterRoute(r)
 	routes.BookingRoute(r)
 	routes.BookingObatRoute(r)
-	r.Run()
+	r.Run(":4444")
 }
