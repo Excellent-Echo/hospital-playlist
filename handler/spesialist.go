@@ -49,6 +49,22 @@ func (h *specialistHandler) GetSpesialistByIDHandler(c *gin.Context) {
 	c.JSON(200, response)
 }
 
+func (h *specialistHandler) GetSpecialistByNameDokterHanlder(c *gin.Context) {
+	id := c.Params.ByName("spesialist_id")
+
+	spesialist, err := h.specialistService.GetSpecialistByNameDokter(id)
+
+	if err != nil {
+		responseError := helper.APIResponse("error bad request specialist ID", 400, "error", gin.H{"error": err.Error()})
+
+		c.JSON(400, responseError)
+		return
+	}
+
+	response := helper.APIResponse("success get user by ID", 200, "success", spesialist)
+	c.JSON(200, response)
+}
+
 func (h *specialistHandler) SaveNewSpesialistHandler(c *gin.Context) {
 	var inputSpesialis entity.SpecialistInput
 

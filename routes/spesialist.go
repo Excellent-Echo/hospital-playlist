@@ -16,6 +16,7 @@ var (
 func SpesialistRoute(r *gin.Engine) {
 	r.GET("/spesialist", spesialistHandler.GetAllSpesialistHandler)
 	r.GET("/spesialist/:spesialist_id", spesialistHandler.GetSpesialistByIDHandler)
+	r.GET("/spesialistbydokter/:spesialist_id", spesialistHandler.GetSpecialistByNameDokterHanlder)
 	r.POST("/spesialist", spesialistHandler.SaveNewSpesialistHandler)
 	r.PUT("/spesialist/:spesialist_id", spesialistHandler.UpdateSpesialistByIDHandler)
 }
